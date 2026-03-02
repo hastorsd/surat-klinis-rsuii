@@ -48,7 +48,7 @@ class FileController extends Controller
             'file_path'     => $filePath
         ]);
 
-        return redirect()->route('file.index')->with('success', 'Berhasil upload surat.');
+        return redirect()->route('admin.file.index')->with('success', 'Berhasil upload surat.');
     }
 
     public function show(Surat $surat)
@@ -97,7 +97,7 @@ class FileController extends Controller
         // 3. update database
         $surat->update($data);
 
-        return redirect()->route('file.index')->with('success', 'Berhasil update data.');
+        return redirect()->route('admin.file.index')->with('success', 'Berhasil update data.');
     }
 
     public function destroy(Surat $surat)
@@ -110,6 +110,6 @@ class FileController extends Controller
         // 2. hapus data di database
         $surat->delete();
 
-        return redirect()->route('file.index')->with('success', 'Berhasil hapus data.');
+        return redirect()->route('admin.file.index')->with('success', 'Berhasil hapus data.');
     }
 }
