@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bank_surat', function (Blueprint $table) {
+        Schema::create('spesialis', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('file_path');
+            $table->foreignId('ksm_id')->constrained('ksms')->cascadeOnDelete();
+            $table->string('spesialis_name'); // ex: urologi
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bank_surat');
+        Schema::dropIfExists('spesialis');
     }
 };
