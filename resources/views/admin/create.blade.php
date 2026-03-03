@@ -6,7 +6,7 @@
     <div class="py-12">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                <form action="{{ route('surat.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.files.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-4">
                         <label class="block text-gray-700">Judul Surat</label>
@@ -39,7 +39,7 @@
                     </div>
 
                     <div class="flex justify-end">
-                        <a href="{{ route('surat.index') }}" class="mr-4 text-gray-600 pt-2">Batal</a>
+                        <a href="{{ route('admin.files.index') }}" class="mr-4 text-gray-600 pt-2">Batal</a>
                         <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">Simpan Surat</button>
                     </div>
                 </form>

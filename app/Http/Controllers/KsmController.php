@@ -15,7 +15,7 @@ class KsmController extends Controller
 
         Ksm::create(['ksm_name' => $request->ksm_name]);
 
-        return redirect()->route('admin.settings')->with('success', 'Berhasil menambahkan data.');
+        return redirect()->route('admin.master')->with('success', 'Berhasil menambahkan data.');
     }
 
     public function update(Request $request, Ksm $ksm)
@@ -26,7 +26,7 @@ class KsmController extends Controller
 
         $ksm->update(['ksm_name' => $request->ksm_name]);
 
-        return redirect()->route('admin.settings')->with('success', 'Berhasil memperbarui data.');
+        return redirect()->route('admin.master')->with('success', 'Berhasil memperbarui data.');
     }
 
     public function destroy(Ksm $ksm)
@@ -34,6 +34,6 @@ class KsmController extends Controller
         // pengecekan tambahan sebelum dihapus kalau dibutuhkan
         $ksm->delete();
 
-        return redirect()->route('admin.settings')->with('success', 'Berhasil hapus data.');
+        return redirect()->route('admin.master')->with('success', 'Berhasil hapus data.');
     }
 }

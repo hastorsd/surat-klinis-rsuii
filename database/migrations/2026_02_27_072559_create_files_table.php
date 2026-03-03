@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('surats')) {
-            Schema::create('surats', function (Blueprint $table) {
+        if (!Schema::hasTable('files')) {
+            Schema::create('files', function (Blueprint $table) {
                 $table->id();
                 $table->string('title');
                 $table->foreignId('spesialis_id')->nullable()->constrained('spesialis')->nullOnDelete(); // ex: THT-KL, bedah, obsgyn, dll

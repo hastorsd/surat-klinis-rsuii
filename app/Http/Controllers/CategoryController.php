@@ -15,25 +15,25 @@ class CategoryController extends Controller
 
         Categories::create(['category_name' => $request->category_name]);
 
-        return redirect()->route('admin.settings')->with('success', 'Berhasil menambahkan data.');
+        return redirect()->route('admin.master')->with('success', 'Berhasil menambahkan data.');
     }
 
-    public function update(Request $request, Categories $categories)
+    public function update(Request $request, Categories $category)
     {
         $request->validate([
             'category_name' => 'required|string'
         ]);
 
-        $categories->update(['category_name' => $request->category_name]);
+        $category->update(['category_name' => $request->category_name]);
 
-        return redirect()->route('admin.settings')->with('success', 'Berhasil memperbarui data.');
+        return redirect()->route('admin.master')->with('success', 'Berhasil memperbarui data.');
     }
 
-    public function destroy(Categories $categories)
+    public function destroy(Categories $category)
     {
         // pengecekan tambahan sebelum dihapus kalau dibutuhkan
-        $categories->delete();
+        $category->delete();
 
-        return redirect()->route('admin.settings')->with('success', 'Berhasil hapus data.');
+        return redirect()->route('admin.master')->with('success', 'Berhasil hapus data.');
     }
 }

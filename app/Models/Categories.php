@@ -18,6 +18,6 @@ class Categories extends Model
     public function files()
     {
         // 1 kategori bisa memiliki banyak surat di dalamnya
-        return $this->hasMany(Surat::class, 'category_id');
+        return $this->hasMany(Files::class, 'category_id');
     }
 }

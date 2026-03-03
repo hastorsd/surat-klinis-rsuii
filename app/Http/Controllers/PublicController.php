@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
+use App\Models\Files;
 use App\Models\Ksm;
-use App\Models\Surat;
 use Illuminate\Http\Request;
 
 class PublicController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Surat::with(['spesialis.ksm', 'category']);
+        $query = Files::with(['spesialis.ksm', 'category']);
 
         // Filter by KSM
         if ($request->filled('ksm_id')) {
@@ -47,7 +47,7 @@ class PublicController extends Controller
         // Total counts per category for header badges
         $totalPerCategory = $stats->pluck('files_count', 'category_name');
 
-        return view('public.index', compact(
+        return view('test', compact(
             'grouped',
             'stats',
             'ksms',
@@ -56,14 +56,34 @@ class PublicController extends Controller
         ));
     }
 
-    public function download(Surat $surat)
+    public function download(Files $files)
     {
-        $filePath = storage_path('app/public/' . $surat->file_path);
+        $filePath = storage_path('app/public/' . $files->file_path);
 
-        if (!file_exists($filePath)) {
-            abort(404, 'File tidak ditemukan.');
+        if (!$files->file_path || !file_exists($filePath)) {
+            return redirect()->back()->with('error', 'File tidak ditemukan.');
         }
 
-        return response()->download($filePath);
+        $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
+
+        $safeTitle = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $files->title);
+
+        $downloadFileName = 'Dokumen_' . $safeTitle . '.' . $fileExtension;
+
+        return response()->download(
+            $filePath,
+            $downloadFileName
+        );
+    }
+
+    public function preview(Files $files)
+    {
+        $filePath = storage_path('app/public/' . $files->file_path);
+
+        if (!$files->file_path || !file_exists($filePath)) {
+            return redirect()->back()->with('error', 'File tidak ditemukan.');
+        }
+
+        return response()->file($filePath);
     }
 }

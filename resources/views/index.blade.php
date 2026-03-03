@@ -486,14 +486,14 @@
     <div class="filter-inner">
         <div class="ksm-tabs">
             {{-- Semua KSM --}}
-            <a href="{{ route('public.files.index') }}"
+            <a href="{{ route('public.surat.index') }}"
                class="ksm-tab {{ !request('ksm_id') && !request('search') ? 'active' : '' }}">
                 Semua KSM
             </a>
 
             {{-- Per KSM --}}
             @foreach($ksms as $ksm)
-                <a href="{{ route('public.files.index', ['ksm_id' => $ksm->id]) }}"
+                <a href="{{ route('public.surat.index', ['ksm_id' => $ksm->id]) }}"
                    class="ksm-tab {{ request('ksm_id') == $ksm->id ? 'active' : '' }}">
                     {{ $ksm->ksm_name }}
                 </a>
@@ -502,7 +502,7 @@
 
         <div class="search-wrap">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <form method="GET" action="{{ route('public.files.index') }}" style="display:inline;">
+            <form method="GET" action="{{ route('public.surat.index') }}" style="display:inline;">
                 @if(request('ksm_id'))
                     <input type="hidden" name="ksm_id" value="{{ request('ksm_id') }}">
                 @endif
@@ -573,8 +573,8 @@
                                 @if(isset($byCategory[$catName]) && $byCategory[$catName]->count() > 0)
                                     <div class="doc-list">
                                         @foreach($byCategory[$catName] as $i => $surat)
-                                            <a href="{{ route('public.surat.download', $surat) }}"
-                                               class="doc-item" title="Download {{ $surat->title }}">
+                                            <a href="{{ route('public.files.download', $surat) }}"
+                                               class="doc-item" title="{{ $surat->title }}">
                                                 <span class="doc-num">{{ $i + 1 }}</span>
                                                 <span class="doc-title">{{ $surat->title }}</span>
                                                 <span class="doc-download">
@@ -599,7 +599,7 @@
             @if(request()->hasAny(['search','ksm_id','category_id']))
                 <h3>Dokumen tidak ditemukan</h3>
                 <p>Coba ubah kata kunci atau filter pencarian Anda.</p>
-                <a href="{{ route('public.files.index') }}"
+                <a href="{{ route('public.surat.index') }}"
                    style="display:inline-flex; align-items:center; gap:6px; margin-top:16px; color:var(--teal); font-size:13px; font-weight:600; text-decoration:none;">
                     ← Lihat semua dokumen
                 </a>
@@ -627,7 +627,7 @@
 {{-- ─── SITE FOOTER ─── --}}
 <footer class="site-footer">
     <div>© {{ date('Y') }} Rumah Sakit UII — Sistem Manajemen Dokumen Klinis</div>
-    <div>Terakhir diperbarui: {{ \App\Models\Surat::latest()->first()?->updated_at?->translatedFormat('d F Y') ?? '-' }}</div>
+    <div>Terakhir diperbarui: {{ \App\Models\Files::latest()->first()?->updated_at?->translatedFormat('d F Y') ?? '-' }}</div>
     <div>
         <span class="status-dot"></span>
         Semua dokumen sudah berjalan, menunggu pengesahan RS

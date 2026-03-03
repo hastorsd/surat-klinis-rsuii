@@ -25,6 +25,6 @@ class Spesialis extends Model
     public function files()
     {
         // 1 spesialis memiliki banyak surat
-        return $this->hasMany(Surat::class, 'spesialis_id');
+        return $this->hasMany(Files::class, 'spesialis_id');
     }
 }
