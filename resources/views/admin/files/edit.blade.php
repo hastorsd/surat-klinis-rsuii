@@ -1,5 +1,6 @@
-@extends('layouts.admin')
+@extends('layouts.admin-sidebar')
 
+@section('title', 'Edit Dokumen')
 @section('page-title', 'Edit Dokumen Klinis')
 
 @section('content')

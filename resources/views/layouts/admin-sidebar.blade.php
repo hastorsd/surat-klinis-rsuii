@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Admin') — Rumah Sakit UII</title>
+    <title>@yield('title', 'Admin') - Rumah Sakit UII</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon"/>
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
     </style>
@@ -28,23 +29,23 @@
     <nav class="flex-1 px-4 py-4 space-y-1">
         <div class="px-4 py-3 text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Manajemen</div>
 
-        <a href="{{ route('admin.dashboard') }}" 
+        {{-- <a href="{{ route('admin.dashboard') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all 
            {{ request()->routeIs('admin.dashboard.*') ? 'bg-blue-800 text-white shadow-lg shadow-blue-800/20' : 'text-slate-400 hover:bg-white/5 hover:text-white' }}">
             <x-heroicon-o-home class="w-5 h-5 mr-3" />
             Dashboard
-        </a>
+        </a> --}}
 
         <a href="{{ route('admin.files.index') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all 
            {{ request()->routeIs('admin.files.*') ? 'bg-blue-800 text-white shadow-lg shadow-blue-800/20' : 'text-slate-400 hover:bg-white/5 hover:text-white' }}">
             <x-heroicon-o-folder class="w-5 h-5 mr-3" />
-            Kelola Surat
+            Kelola Dokumen
         </a>
 
         <a href="{{ route('admin.master') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all 
-           {{ request()->routeIs('admin.settings') ? 'bg-blue-800 text-white shadow-lg shadow-blue-800/20' : 'text-slate-400 hover:bg-white/5 hover:text-white' }}">
+           {{ request()->routeIs('admin.master') ? 'bg-blue-800 text-white shadow-lg shadow-blue-800/20' : 'text-slate-400 hover:bg-white/5 hover:text-white' }}">
             <x-heroicon-o-rectangle-stack class="w-5 h-5 mr-3" />
             Master Data
         </a>
@@ -196,6 +197,17 @@
             span.textContent = name;
             form.action = `/admin/category/${id}`;
             openModal('modal-delete-category');
+        }
+    }
+
+    // === FILES FUNCTION ===
+    function confirmDeleteFile(id, name) {
+        const span = document.getElementById('delete-file-name');
+        const form = document.getElementById('form-delete-file');
+        if (span && form) {
+            span.textContent = name;
+            form.action = `/admin/files/${id}`;
+            openModal(`modal-delete-file`);
         }
     }
 </script>

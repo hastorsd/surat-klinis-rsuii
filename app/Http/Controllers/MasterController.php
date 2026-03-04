@@ -15,6 +15,6 @@ class MasterController extends Controller
         $categories = Categories::withCount('files')->orderBy('category_name')->get();
         $ksmList = Ksm::orderBy('ksm_name')->get(); // untuk dropdown di form spesialis
 
-        return view('admin.master-data', compact('ksm', 'spesialis', 'categories', 'ksmList'));
+        return view('admin.master.master-data', compact('ksm', 'spesialis', 'categories', 'ksmList'));
     }
 }

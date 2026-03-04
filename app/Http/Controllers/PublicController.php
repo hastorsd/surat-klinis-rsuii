@@ -28,7 +28,7 @@ class PublicController extends Controller
             $query->where('title', 'like', '%' . $request->search . '%');
         }
 
-        $files = $query->latest()->get();
+        $files = $query->get();
 
         // Grouping: KSM name -> Spesialis name -> collection of files
         $grouped = $files
@@ -47,7 +47,7 @@ class PublicController extends Controller
         // Total counts per category for header badges
         $totalPerCategory = $stats->pluck('files_count', 'category_name');
 
-        return view('test', compact(
+        return view('main', compact(
             'grouped',
             'stats',
             'ksms',

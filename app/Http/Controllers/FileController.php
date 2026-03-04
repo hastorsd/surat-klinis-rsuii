@@ -10,12 +10,15 @@ use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil semua files beserta nama spesialis, KSM, dan kategorinya
-        $files = Files::with(['spesialis.ksm', 'category'])->latest()->get();
+        // paginate
+        $perPage = $request->input('perPage', 10);
 
-        return view('admin.index', compact('files'));
+        // Mengambil semua files beserta nama spesialis, KSM, dan kategorinya
+        $files = Files::with(['spesialis.ksm', 'category'])->latest()->paginate($perPage);
+
+        return view('admin.files.index', compact('files', 'perPage'));
     }
 
     public function create()
@@ -24,7 +27,7 @@ class FileController extends Controller
         $spesialis = Spesialis::with('ksm')->get();
         $categories = Categories::all();
 
-        return view('admin.create', compact('spesialis', 'categories'));
+        return view('admin.files.create', compact('spesialis', 'categories'));
     }
 
     public function store(Request $request)
@@ -48,7 +51,7 @@ class FileController extends Controller
             'file_path'     => $filePath
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Berhasil upload surat.');
+        return redirect()->route('admin.files.index')->with('success', 'Berhasil upload surat.');
     }
 
     public function edit(Files $files)
@@ -56,7 +59,7 @@ class FileController extends Controller
         $spesialis = Spesialis::with('ksm')->get();
         $categories = Categories::all();
 
-        return view('admin.edit', compact('files', 'spesialis', 'categories'));
+        return view('admin.files.edit', compact('files', 'spesialis', 'categories'));
     }
 
     public function update(Request $request, Files $files)
@@ -89,7 +92,7 @@ class FileController extends Controller
         // 3. update database
         $files->update($data);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Berhasil update data.');
+        return redirect()->route('admin.files.index')->with('success', 'Berhasil update data.');
     }
 
     public function destroy(Files $files)
@@ -102,6 +105,6 @@ class FileController extends Controller
         // 2. hapus data di database
         $files->delete();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Berhasil hapus data.');
+        return redirect()->route('admin.files.index')->with('success', 'Berhasil hapus data.');
     }
 }
