@@ -17,7 +17,7 @@
 </head>
 <body class="bg-slate-100 text-blue-900 min-h-screen">
 
-<header class="sticky top-0 z-[100] bg-blue-600 px-6 shadow-md border-b border-blue-300">
+<header class="sticky top-0 z-[100] bg-blue-700 px-6 shadow-md border-b border-blue-300">
     <div class="max-w-7xl mx-auto flex items-center justify-between h-[72px]">
         {{-- Logo dan header title --}}
         <div class="flex items-center gap-4">
@@ -44,22 +44,42 @@
 
 <nav class="sticky top-[72px] z-[90] bg-white border-b border-slate-200 px-6 shadow-sm">
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 h-14">
-        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar flex-1 py-2">
-            {{-- Tampilkan semua KSM dalam 1 halaman --}}
-            <a href="{{ route('public.files.index') }}" 
-               class="px-4 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap 
-               {{ !request('ksm_id') ? 'bg-blue-600 text-white shadow-md shadow-slate-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
-                Semua KSM
-            </a>
+        
+        <div class="relative flex-1 flex items-center group overflow-hidden">
+            
+            <button 
+                id="btn-nav-left"
+                onclick="document.getElementById('nav-ksm-scroll').scrollBy({left: -200, behavior: 'smooth'})"
+                class="hidden absolute left-0 z-10 h-8 w-8 flex items-center justify-center bg-white/90 backdrop-blur rounded-full border border-slate-200 shadow-sm text-slate-600 hover:text-blue-700 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+            </button>
 
-            {{-- Loop navigasi KSM di bawah navbar --}}
-            @foreach($ksms as $ksm)
-                <a href="{{ route('public.files.index', ['ksm_id' => $ksm->id]) }}" 
-                   class="px-4 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap
-                   {{ request('ksm_id') == $ksm->id ? 'bg-blue-600 text-white shadow-md shadow-slate-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
-                    {{ $ksm->ksm_name }}
+            <div id="nav-ksm-scroll" class="flex items-center gap-2 overflow-x-auto no-scrollbar flex-1 py-2 scroll-smooth">
+                {{-- Tampilkan semua KSM dalam 1 halaman --}}
+                <a href="{{ route('public.files.index') }}" 
+                   class="shrink-0 px-4 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap 
+                   {{ !request('ksm_id') ? 'bg-blue-700 text-white shadow-md shadow-slate-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                    Semua KSM
                 </a>
-            @endforeach
+
+                {{-- Loop navigasi KSM --}}
+                @foreach($ksms as $ksm)
+                    <a href="{{ route('public.files.index', ['ksm_id' => $ksm->id]) }}" 
+                       class="shrink-0 px-4 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap
+                       {{ request('ksm_id') == $ksm->id ? 'bg-blue-700 text-white shadow-md shadow-slate-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                        {{ $ksm->ksm_name }}
+                    </a>
+                @endforeach
+            </div>
+
+            <button 
+                id="btn-nav-right"
+                onclick="document.getElementById('nav-ksm-scroll').scrollBy({left: 200, behavior: 'smooth'})"
+                class="absolute right-0 z-10 h-8 w-8 flex items-center justify-center bg-white/90 backdrop-blur rounded-full border border-slate-200 shadow-sm text-slate-600 hover:text-blue-700 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0"
+            >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
         </div>
 
         {{-- Search --}}
@@ -68,8 +88,8 @@
             <form method="GET" action="{{ route('public.files.index') }}">
             @if(request('ksm_id')) <input type="hidden" name="ksm_id" value="{{ request('ksm_id') }}"> @endif
             <input type="text" name="search" value="{{ request('search') }}" 
-                   class="pl-9 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white focus:w-80 shadow-inner transition-all duration-300 w-48" 
-                   placeholder="Cari dokumen...">
+                    class="pl-9 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white focus:w-80 shadow-inner transition-all duration-300 w-48" 
+                    placeholder="Cari dokumen...">
             </form>
         </div>
     </div>
@@ -89,7 +109,7 @@
         @endphp
 
         <section class="mb-10 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-            <div class="bg-blue-600 px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-100">
+            <div class="bg-blue-700 px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-100">
                 <div class="flex items-center gap-3">
                     <span class="text-white font-extrabold text-sm tracking-wide uppercase">KSM {{ $ksmName }}</span>
                 </div>
@@ -133,13 +153,13 @@
                                                 <a href="{{ route('public.files.preview', $surat->id) }}" target="_blank" class="flex items-start p-4 gap-4 flex-1 min-w-0">
                                                     
                                                     {{-- Nomor Urut --}}
-                                                    <span class="shrink-0 w-7 h-7 bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white text-[11px] font-black flex items-center justify-center rounded-lg transition-all duration-300 mt-0.5">
+                                                    <span class="shrink-0 w-7 h-7 bg-slate-100 text-slate-600 group-hover:bg-blue-700 group-hover:text-white text-[11px] font-black flex items-center justify-center rounded-lg transition-all duration-300 mt-0.5">
                                                         {{ $i + 1 }}
                                                     </span>
 
                                                     <div class="flex flex-col min-w-0">
                                                         {{-- Judul: Full Text & Wrap --}}
-                                                        <h3 class="text-[13px] font-bold text-slate-700 group-hover:text-blue-600 transition-colors">
+                                                        <h3 class="text-[13px] font-bold text-slate-700 group-hover:text-blue-700 transition-colors">
                                                             {{ $surat->title }}
                                                         </h3>
                                                         
@@ -156,11 +176,10 @@
                                                         </div>
                                                     </div>
                                                 </a>
-
                                                 {{-- TOMBOL DOWNLOAD (Terpisah secara elemen namun terlihat menyatu) --}}
-                                                <div class="pr-4">
+                                                <div class="m-2">
                                                     <a href="{{ route('public.files.download', $surat->id) }}" 
-                                                    class="relative z-10 flex items-center justify-center w-10 h-10 bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white rounded-full transition-all duration-300 shadow-sm" 
+                                                    class="relative z-10 flex items-center justify-center w-10 h-10 bg-slate-50 text-slate-400 hover:bg-blue-700 hover:text-white rounded-full transition-all duration-300 shadow-sm" 
                                                     title="Unduh Dokumen">
                                                         <x-heroicon-o-arrow-down-tray class="w-5 h-5"/>
                                                     </a>
@@ -207,15 +226,53 @@
     @guest
         <a href="{{ route('login') }}" class="flex items-center gap-2 bg-blue-900 hover:bg-slate-800 text-white px-5 py-3 rounded-xl text-[11px] font-bold shadow-2xl">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            ADMIN LOGIN
+            LOGIN ADMIN
         </a>
     @else
         <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 bg-blue-900 hover:bg-slate-800 text-white px-5 py-3 rounded-xl text-[11px] font-bold shadow-2xl">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-            DASHBOARD
+            DASHBOARD ADMIN
         </a>
     @endguest
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const scrollContainer = document.getElementById('nav-ksm-scroll');
+        const btnLeft = document.getElementById('btn-nav-left');
+        const btnRight = document.getElementById('btn-nav-right');
+
+        function updateArrowVisibility() {
+            const scrollLeft = scrollContainer.scrollLeft;
+            const scrollWidth = scrollContainer.scrollWidth;
+            const clientWidth = scrollContainer.clientWidth;
+
+            // Sembunyikan panah kiri jika di posisi 0
+            if (scrollLeft <= 2) {
+                btnLeft.classList.add('hidden');
+            } else {
+                btnLeft.classList.remove('hidden');
+            }
+
+            // Sembunyikan panah kanan jika sudah mentok kanan
+            // Toleransi 2px untuk pembulatan layar
+            if (scrollLeft + clientWidth >= scrollWidth - 2) {
+                btnRight.classList.add('hidden');
+            } else {
+                btnRight.classList.remove('hidden');
+            }
+        }
+
+        // Jalankan saat scroll
+        scrollContainer.addEventListener('scroll', updateArrowVisibility);
+        
+        // Jalankan saat resize jendela (siapa tahu dari desktop ke mobile)
+        window.addEventListener('resize', updateArrowVisibility);
+
+        // Jalankan pertama kali saat halaman dimuat
+        setTimeout(updateArrowVisibility, 100);
+    });
+</script>
 
 </body>
 </html>

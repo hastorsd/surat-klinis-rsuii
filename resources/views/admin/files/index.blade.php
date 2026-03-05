@@ -5,48 +5,34 @@
 
 @section('content')
 <div class="space-y-6">
-    {{-- ALERT SUCCESS --}}
-    {{-- @if(session('success'))
-        <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-xl shadow-sm animate-fade-in-down">
-            <div class="flex items-center">
-                <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-emerald-500" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-bold text-emerald-800">{{ session('success') }}</p>
-                </div>
-            </div>
-        </div>
-    @endif --}}
+    <div class="flex justify-end items-center text-end gap-3 mb-6">
+        {{-- Per Page Selector --}}
+        <form method="GET" class="flex items-center bg-white border border-slate-200 rounded-xl px-3 py-1.5 shadow-sm">
+            <span class="text-[10px] font-bold text-slate-400 uppercase mr-2 tracking-wider">Tampilkan</span>
+            <select name="perPage" onchange="this.form.submit()" class="text-xs font-bold text-slate-700 focus:outline-none bg-transparent cursor-pointer">
+                @foreach ([10, 25, 50, 100] as $size)
+                    <option value="{{ $size }}" {{ $perPage == $size ? 'selected' : '' }}>{{ $size }}</option>
+                @endforeach
+            </select>
+        </form>
+
+        {{-- Tombol Tambah --}}
+        <a href="{{ route('admin.files.create') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Tambah Dokumen
+        </a>
+    </div>
 
     {{-- MAIN CARD --}}
     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         {{-- HEADER TABLE --}}
-        <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/50">
+        {{-- <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/50">
             <div>
                 <h3 class="text-base font-bold text-slate-800">Daftar Dokumen Klinis</h3>
                 <p class="text-xs text-slate-500 mt-1 font-medium">Total: {{ $files->count() }} dokumen</p>
             </div>
-            <div class="flex items-center gap-3">
-                {{-- Per Page Selector --}}
-                <form method="GET" class="flex items-center bg-white border border-slate-200 rounded-xl px-3 py-1.5 shadow-sm">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase mr-2 tracking-wider">Tampilkan</span>
-                    <select name="perPage" onchange="this.form.submit()" class="text-xs font-bold text-slate-700 focus:outline-none bg-transparent cursor-pointer">
-                        @foreach ([10, 25, 50, 100] as $size)
-                            <option value="{{ $size }}" {{ $perPage == $size ? 'selected' : '' }}>{{ $size }}</option>
-                        @endforeach
-                    </select>
-                </form>
-
-                {{-- Tombol Tambah --}}
-                <a href="{{ route('admin.files.create') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-800 hover:bg-blue-900 text-white text-xs font-bold rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    Tambah Dokumen
-                </a>
-            </div>
-        </div>
+            
+        </div> --}}
 
         {{-- TABLE AREA --}}
         <div class="overflow-x-auto">
@@ -108,8 +94,7 @@
                     <tr>
                         <td colspan="4" class="px-6 py-12 text-center">
                             <div class="flex flex-col items-center justify-center">
-                                <svg class="w-12 h-12 text-slate-200 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/></svg>
-                                <p class="text-sm text-slate-400 font-medium">Belum ada dokumen yang tersedia.</p>
+                                <p class="text-sm text-slate-400 font-medium">Belum ada dokumen.</p>
                             </div>
                         </td>
                     </tr>
@@ -117,14 +102,61 @@
                 </tbody>
             </table>
         </div>
-        
-        {{-- FOOTER AREA (Jika ada pagination) --}}
-        @if($files instanceof \Illuminate\Pagination\LengthAwarePaginator)
-        <div class="p-4 bg-slate-50/50 border-t border-slate-100">
-            {{ $files->appends(['perPage' => $perPage])->links() }}
+    </div>
+    
+    {{-- FOOTER AREA: Pagination --}}
+        @if($files instanceof \Illuminate\Pagination\LengthAwarePaginator && $files->hasPages())
+        <div class="mt-8 flex flex-col md:flex-row items-center justify-between gap-4 px-8 py-5 bg-white border border-slate-100 rounded-[2rem] shadow-xl shadow-slate-200/40">
+            
+            {{-- Label Informasi --}}
+            <div class="flex items-center gap-3">
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                    Menampilkan data ke <span class="text-slate-900">{{ $files->firstItem() }}</span> - <span class="text-slate-900">{{ $files->lastItem() }}</span>  
+                    Dari total <span class="text-slate-900">{{ $files->total() }}</span> Dokumen
+                </p>
+            </div>
+
+            {{-- Navigasi Angka --}}
+            <nav class="flex items-center gap-1.5">
+                {{-- Tombol Previous --}}
+                @if ($files->onFirstPage())
+                    <span class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-50 text-slate-300 cursor-not-allowed">
+                        <x-heroicon-s-chevron-left class="w-5 h-5"/>
+                    </span>
+                @else
+                    <a href="{{ $files->previousPageUrl() }}" class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-100 text-slate-600 hover:bg-slate-200 transition-all duration-300 shadow-sm">
+                        <x-heroicon-s-chevron-left class="w-5 h-5"/>
+                    </a>
+                @endif
+
+                {{-- Logika Angka Halaman (Desktop Only) --}}
+                <div class="hidden sm:flex items-center gap-1.5">
+                    @foreach ($files->getUrlRange(max(1, $files->currentPage() - 1), min($files->lastPage(), $files->currentPage() + 1)) as $page => $url)
+                        @if ($page == $files->currentPage())
+                            <span class="w-10 h-10 flex items-center justify-center rounded-xl bg-blue-900 text-white font-black text-xs shadow-lg shadow-slate-200 scale-110 z-10">
+                                {{ $page }}
+                            </span>
+                        @else
+                            <a href="{{ $url }}" class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-100 bg-white text-slate-600 font-bold text-xs hover:border-slate-900 hover:text-slate-900 transition-all duration-300">
+                                {{ $page }}
+                            </a>
+                        @endif
+                    @endforeach
+                </div>
+
+                {{-- Tombol Next --}}
+                @if ($files->hasMorePages())
+                    <a href="{{ $files->nextPageUrl() }}" class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-100 text-slate-600 hover:bg-slate-200 transition-all duration-300 shadow-sm">
+                        <x-heroicon-s-chevron-right class="w-5 h-5"/>
+                    </a>
+                @else
+                    <span class="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-50 text-slate-300 cursor-not-allowed">
+                        <x-heroicon-s-chevron-right class="w-5 h-5"/>
+                    </span>
+                @endif
+            </nav>
         </div>
         @endif
-    </div>
 </div>
 
 <div id="modal-delete-file" class="modal-overlay fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] hidden items-center justify-center p-4">

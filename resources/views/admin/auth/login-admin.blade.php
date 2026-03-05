@@ -20,7 +20,7 @@
     <script>window.location = "{{ route('admin.dashboard') }}";</script>
 @endif
 
-<body class="bg-slate-300 flex items-center justify-center min-h-screen p-6 transition-colors duration-500">
+<body class="bg-blue-100 flex items-center justify-center min-h-screen p-6 transition-colors duration-500">
     {{-- Lebar max ditingkatkan sedikit ke max-w-lg untuk kenyamanan visual teks yang panjang --}}
     <div class="relative bg-white shadow-2xl rounded-3xl border border-gray-100 p-8 md:p-12 w-full max-w-lg transition-all duration-500">
         
@@ -97,11 +97,20 @@
             {{-- Tombol Login: Padding vertikal dipertebal (py-3.5) untuk kesan lebih kokoh --}}
             <div class="pt-2">
                 <button type="submit"
-                    class="w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl hover:bg-slate-800 transition-all shadow-lg active:scale-[0.98] tracking-wider">
+                    class="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl hover:bg-blue-500 transition-all shadow-lg active:scale-[0.98] tracking-wider">
                     Masuk
                 </button>
             </div>
         </form>
+        <div class="mt-6 text-center">
+            <a href="{{ route('public.files.index') }}" 
+               class="inline-flex items-center gap-2 text-slate-600 hover:text-blue-600 text-sm font-medium transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h18M3 12l7 7m-7-7l7-7"></path>
+            </svg>
+            Kembali ke Halaman Utama
+            </a>
+        </div>
     </div>
 </body>
 </html>

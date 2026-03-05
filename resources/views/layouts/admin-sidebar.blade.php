@@ -15,13 +15,13 @@
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen flex">
 
-<aside class="fixed inset-y-0 left-0 w-64 bg-slate-900 flex flex-col z-[100] shadow-2xl">
+<aside class="fixed inset-y-0 left-0 w-64 bg-white flex flex-col z-[100] shadow-xl">
     <div class="p-6 flex items-center gap-3">
-        <div class="h-10 w-10 bg-slate-900 rounded-xl flex items-center justify-center shrink-0">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-6 h-6 object-contain">
+        <div class="h-10 w-10 bg-white rounded-xl flex items-center justify-center shrink-0">
+            <img src="{{ asset(path: 'images/logo-transparent-yellow.png') }}" alt="Logo" class="w-6 h-6 object-contain">
         </div>
         <div>
-            <h1 class="text-white text-sm font-extrabold leading-tight">Rumah Sakit UII</h1>
+            <h1 class="text-blue-600 text-sm font-extrabold leading-tight">Dokumen Klinis RSUII</h1>
             <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Admin Panel</p>
         </div>
     </div>
@@ -38,14 +38,14 @@
 
         <a href="{{ route('admin.files.index') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all 
-           {{ request()->routeIs('admin.files.*') ? 'bg-blue-800 text-white shadow-lg shadow-blue-800/20' : 'text-slate-400 hover:bg-white/5 hover:text-white' }}">
+           {{ request()->routeIs('admin.files.*') ? 'bg-blue-800 text-white shadow-lg shadow-blue-800/20' : 'text-slate-400 hover:bg-white/5 hover:text-blue-600' }}">
             <x-heroicon-o-folder class="w-5 h-5 mr-3" />
             Kelola Dokumen
         </a>
 
         <a href="{{ route('admin.master') }}" 
            class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all 
-           {{ request()->routeIs('admin.master') ? 'bg-blue-800 text-white shadow-lg shadow-blue-800/20' : 'text-slate-400 hover:bg-white/5 hover:text-white' }}">
+           {{ request()->routeIs('admin.master') ? 'bg-blue-800 text-white shadow-lg shadow-blue-800/20' : 'text-slate-400 hover:bg-white/5 hover:text-blue-600' }}">
             <x-heroicon-o-rectangle-stack class="w-5 h-5 mr-3" />
             Master Data
         </a>
@@ -53,29 +53,46 @@
         <div class="px-4 py-6 text-[10px] font-bold text-slate-600 uppercase tracking-[0.2em]">Redirect</div>
         
         <a href="{{ route('public.files.index') }}" target="_blank" 
-           class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-white/5 hover:text-white transition-all">
+           class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-white/5 hover:text-blue-600 transition-all">
             <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
             Halaman Publik
         </a>
     </nav>
 
-    <div class="p-4 bg-black/20">
-        <div class="flex items-center gap-3 p-3 bg-white/5 rounded-2xl mb-3 border border-white/5">
-            <div class="h-9 w-9 bg-slate-700 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+    <div class="p-4 mt-auto border-t border-slate-100">
+        <a href="{{ route('profile.edit') }}">
+            {{-- Card Profil Admin --}}
+            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl mb-3 border border-slate-100/50">
+                {{-- Avatar dengan Inisial --}}
+                <div class="h-10 w-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200 shrink-0 tracking-tighter">
+                    <span class="text-xs font-black">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                </div>
+                    
+                <div class="overflow-hidden">
+                    <p class="text-slate-800 text-sm font-extrabold truncate leading-tight">
+                        {{ auth()->user()->name }}
+                    </p>
+                    <div class="flex items-center gap-1 mt-0.5">
+                        <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                        <p class="text-slate-500 text-[9px] font-bold uppercase tracking-wider">Administrator</p>
+                    </div>
+                </div>
             </div>
-            <div class="overflow-hidden">
-                <p class="text-white text-xs font-bold truncate">{{ auth()->user()->name }}</p>
-                <p class="text-slate-500 text-[10px] font-medium">Administrator</p>
-            </div>
-        </div>
-        <form method="POST" action="{{ route('logout') }}">
+        </a>
+
+        {{-- Form Logout (Hidden) --}}
+        <form id="logout-form" method="POST" action="{{ route('logout') }}" class="hidden">
             @csrf
-            <button type="submit" class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold text-red-400 border border-red-400/20 hover:bg-red-400/10 transition-all">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                Keluar
-            </button>
         </form>
+        
+        {{-- Tombol Logout --}}
+        <button type="button" onclick="confirmLogout()" 
+            class="group w-full flex items-center justify-center gap-2.5 py-3 rounded-xl text-[11px] font-bold text-slate-500 border border-slate-100 hover:border-red-100 hover:bg-red-50 hover:text-red-600 transition-all duration-300 shadow-sm hover:shadow-red-100/50">
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-red-500 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span>Keluar</span>
+        </button>
     </div>
 </aside>
 
@@ -105,6 +122,29 @@
         @yield('content')
     </div>
 </main>
+<div id="modal-logout" class="fixed inset-0 z-[150] hidden items-center justify-center modal-overlay bg-slate-900/40 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden transform transition-all m-4">
+        <div class="p-8 text-center">
+            <div class="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+            </div>
+            <h3 class="text-xl font-extrabold text-slate-800 mb-2">Konfirmasi Keluar</h3>
+            <p class="text-slate-500 text-sm font-medium leading-relaxed">
+                Apakah Anda yakin ingin mengakhiri sesi ini dan keluar dari sistem?
+            </p>
+        </div>
+        <div class="p-6 bg-slate-50 flex gap-3">
+            <button onclick="closeModal('modal-logout')" class="flex-1 py-3 px-4 rounded-xl text-sm font-bold text-slate-600 bg-slate-200 hover:bg-slate-300 transition-all">
+                Batal
+            </button>
+            <button onclick="document.getElementById('logout-form').submit();" class="flex-1 py-3 px-4 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700 shadow-lg shadow-red-500/20 transition-all">
+                Keluar
+            </button>
+        </div>
+    </div>
+</div>
 
 @stack('scripts')
 
@@ -210,6 +250,11 @@
             openModal(`modal-delete-file`);
         }
     }
+
+    function confirmLogout() {
+        openModal('modal-logout');
+    }
+    
 </script>
 
 </body>
