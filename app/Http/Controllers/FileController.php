@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
-use App\Models\Spesialis;
 use App\Models\Files;
+use App\Models\Spesialis;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,11 +38,32 @@ class FileController extends Controller
             'title'         => 'required|string',
             'spesialis_id'  => 'required|exists:spesialis,id',
             'category_id'   => 'required|exists:categories,id',
-            'file'          => 'required|mimes:pdf,doc,docx|max:10240' // max 10MB, hanya pdf dan word
+            'file_path'     => 'required|mimes:pdf,doc,docx|max:10240' // max 10MB, hanya pdf dan word
         ]);
 
         // 2. simpan file ke storage (storage/app/public/surat_klinis)
-        $filePath = $request->file('file')->store('surat_klinis', 'public');
+        // $filePath = $request->file('file')->store('surat_klinis', 'public');
+
+        $filePath = null;
+        if ($request->hasFile('file_path')) {
+            $file = $request->file('file_path');
+            $originalName = $file->getClientOriginalName();
+            
+            // // Opsi 1: Gunakan nama asli langsung
+            // $path = $file->storeAs('surat', $originalName, 'public');
+            
+            // Opsi 2: Tambahkan timestamp untuk menghindari duplikasi (RECOMMENDED)
+            // $fileName = time() . '_' . $originalName;
+            // $path = $file->storeAs('surat', $fileName, 'public');
+            
+            // Opsi 3: Sanitasi nama file untuk keamanan
+            // Gunakan Carbon dengan format WIB
+            $timestamp = Carbon::now()->format('YmdHis');
+            $safeName  = uniqid(). '_' . preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $originalName);
+            $fileName = $timestamp . '_' . $safeName;
+
+            $filePath = $file->storeAs('dokumen_klinis', $fileName, 'public');
+        }
 
         // 3. simpan path file dan data lainnya ke database
         Files::create([
@@ -69,28 +91,38 @@ class FileController extends Controller
             'title'         => 'required|string',
             'spesialis_id'  => 'required|exists:spesialis,id',
             'category_id'   => 'required|exists:categories,id',
-            'file'          => 'nullable|mimes:pdf,doc,docx|max:10240' // max 10MB, hanya pdf dan word
+            'file_path'     => 'nullable|mimes:pdf,doc,docx|max:10240' // max 10MB, hanya pdf dan word
         ]);
 
-        $data = [
-            'title'         => $request->title,
-            'spesialis_id'  => $request->spesialis_id,
-            'category_id'   => $request->category_id,
-        ];
+        // default path dokumen
+        $filePath = $files->file_path;
 
         // 2. cek apakah ada file baru yang diunggah
-        if ($request->hasFile('file')) {
+        if ($request->hasFile('file_path')) {
             // hapus file lama di storage jika ada
             if ($files->file_path && Storage::disk('public')->exists($files->file_path)) {
                 Storage::disk('public')->delete($files->file_path);
             }
 
-            // simpan file baru
-            $data['file_path'] = $request->file('file')->store('surat_klinis', 'public');
+            // Simpan file baru dengan format yang sama seperti store
+            $file = $request->file('file_path');
+            $originalName = $file->getClientOriginalName();
+            
+            $timestamp = Carbon::now()->format('YmdHis');
+            $safeName = uniqid() . '_' . preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $originalName);
+            $fileName = $timestamp . '_' . $safeName;
+            
+            $filePath = $file->storeAs('dokumen_klinis', $fileName, 'public');
+
         }
 
         // 3. update database
-        $files->update($data);
+        $files->update([
+            'title'         => $request->title,
+            'spesialis_id'  => $request->spesialis_id,
+            'category_id'   => $request->category_id,
+            'file_path'     => $filePath
+        ]);
 
         return redirect()->route('admin.files.index')->with('success', 'Berhasil update data.');
     }
