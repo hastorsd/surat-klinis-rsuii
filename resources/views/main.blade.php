@@ -46,49 +46,104 @@
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-4 h-14">
         
         <div class="relative flex-1 flex items-center group overflow-hidden">
-            
-            <button 
-                id="btn-nav-left"
-                onclick="document.getElementById('nav-ksm-scroll').scrollBy({left: -200, behavior: 'smooth'})"
-                class="hidden absolute left-0 z-10 h-8 w-8 flex items-center justify-center bg-white/90 backdrop-blur rounded-full border border-slate-200 shadow-sm text-slate-600 hover:text-blue-700 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0"
-            >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-            </button>
 
-            <div id="nav-ksm-scroll" class="flex items-center gap-2 overflow-x-auto no-scrollbar flex-1 py-2 scroll-smooth">
-                {{-- Tampilkan semua KSM dalam 1 halaman --}}
-                <a href="{{ route('public.files.index') }}" 
-                   class="shrink-0 px-4 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap 
-                   {{ !request('ksm_id') ? 'bg-blue-700 text-white shadow-md shadow-slate-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
-                    Semua KSM
-                </a>
-
-                {{-- Loop navigasi KSM --}}
-                @foreach($ksms as $ksm)
-                    <a href="{{ route('public.files.index', ['ksm_id' => $ksm->id]) }}" 
-                       class="shrink-0 px-4 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap
-                       {{ request('ksm_id') == $ksm->id ? 'bg-blue-700 text-white shadow-md shadow-slate-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
-                        {{ $ksm->ksm_name }}
-                    </a>
-                @endforeach
+            {{-- Dropdown --}}
+            <div class="lg:hidden w-full relative">
+                <select onchange="window.location.href=this.value"
+                    class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold py-2 px-3 rounded-lg focus:outline-none appearance-none cursor-pointer">
+                    <option value="{{ route('public.files.index') }}" {{ !request('ksm_id') ? 'selected' : '' }}>
+                        SEMUA KSM
+                    </option>
+                    @foreach ($ksms as $ksm)
+                        <option value="{{ route('public.files.index', ['ksm_id' => $ksm->id]) }}" {{ request('ksm_id') == $ksm->id ? 'selected' : '' }}>
+                            KSM {{ $ksm->ksm_name }}
+                        </option>
+                    @endforeach
+                </select>
+                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-slate-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
             </div>
 
-            <button 
-                id="btn-nav-right"
-                onclick="document.getElementById('nav-ksm-scroll').scrollBy({left: 200, behavior: 'smooth'})"
-                class="absolute right-0 z-10 h-8 w-8 flex items-center justify-center bg-white/90 backdrop-blur rounded-full border border-slate-200 shadow-sm text-slate-600 hover:text-blue-700 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0"
-            >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-            </button>
+            {{-- Scroll --}}
+            <div class="hidden lg:flex items-center w-full relative overflow-hidden group">
+                <button 
+                    id="btn-nav-left"
+                    onclick="document.getElementById('nav-ksm-scroll').scrollBy({left: -200, behavior: 'smooth'})"
+                    class="hidden absolute left-0 z-10 h-8 w-8 flex items-center justify-center bg-white/90 backdrop-blur rounded-full border border-slate-200 shadow-sm text-slate-600 hover:text-blue-700 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+                </button>
+
+                <div id="nav-ksm-scroll" class="flex items-center gap-2 overflow-x-auto no-scrollbar flex-1 py-2 scroll-smooth">
+                    {{-- Tampilkan semua KSM dalam 1 halaman --}}
+                    <a href="{{ route('public.files.index') }}" 
+                       class="shrink-0 px-4 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap 
+                       {{ !request('ksm_id') ? 'bg-blue-700 text-white shadow-md shadow-slate-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                        Semua KSM
+                    </a>
+
+                    {{-- Loop navigasi KSM --}}
+                    @foreach($ksms as $ksm)
+                        <a href="{{ route('public.files.index', ['ksm_id' => $ksm->id]) }}" 
+                            class="shrink-0 px-4 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap
+                            {{ request('ksm_id') == $ksm->id ? 'bg-blue-700 text-white shadow-md shadow-slate-900/20' : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900' }}">
+                            {{ $ksm->ksm_name }}
+                        </a>
+                    @endforeach
+                </div>
+
+                <button 
+                    id="btn-nav-right"
+                    onclick="document.getElementById('nav-ksm-scroll').scrollBy({left: 200, behavior: 'smooth'})"
+                    class="absolute right-0 z-10 h-8 w-8 flex items-center justify-center bg-white/90 backdrop-blur rounded-full border border-slate-200 shadow-sm text-slate-600 hover:text-blue-700 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-2 group-hover:translate-x-0"
+                >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
         </div>
 
         {{-- Search --}}
-        <div class="relative shrink-0">
+        {{-- <div class="relative shrink-0 hidden sm:block">
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 transition-all duration-300" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <form method="GET" action="{{ route('public.files.index') }}">
             @if(request('ksm_id')) <input type="hidden" name="ksm_id" value="{{ request('ksm_id') }}"> @endif
             <input type="text" name="search" value="{{ request('search') }}" 
                     class="pl-9 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white focus:w-80 shadow-inner transition-all duration-300 w-48" 
+                    placeholder="Cari dokumen...">
+            </form>
+        </div> --}}
+
+        {{-- Search --}}
+        <div class="relative shrink-0 flex items-center">
+            <form method="GET" action="{{ route('public.files.index') }}" class="relative group">
+                @if(request('ksm_id')) 
+                    <input type="hidden" name="ksm_id" value="{{ request('ksm_id') }}"> 
+                @endif
+                
+                <div class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none z-10">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                </div>
+
+                <input type="text" name="search" value="{{ request('search') }}" 
+                    class="
+                        /* Layout Dasar */
+                        py-2 bg-slate-100 border border-slate-200 rounded-lg text-xs 
+                        focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white 
+                        shadow-inner transition-all duration-300
+                        
+                        /* Tampilan Mobile: Hanya icon (lebar kecil) */
+                        w-10 pl-10 pr-0 placeholder-transparent
+                        
+                        /* Tampilan Desktop (sm ke atas): Lebar normal */
+                        sm:w-48 sm:pl-9 sm:pr-4 sm:placeholder-slate-400
+                        
+                        /* Saat Fokus di Mobile: Melebar ke kiri */
+                        focus:w-64 focus:pl-9 focus:pr-4 focus:placeholder-slate-400
+                        sm:focus:w-80
+                    " 
                     placeholder="Cari dokumen...">
             </form>
         </div>
